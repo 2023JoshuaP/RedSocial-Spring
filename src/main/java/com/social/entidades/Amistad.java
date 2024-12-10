@@ -20,31 +20,31 @@ public class Amistad
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private long usuario1;	
+	private long usuario1;
 	private long usuario2;
 	
 	public Amistad() {}
 	
-	public Amistad(long id_us1, long id_us2)
+	public Amistad(long idUs1, long idUs2)
 	{
-		this.usuario1 = id_us1;
-		this.usuario2 = id_us2;
+		this.usuario1 = idUs1;
+		this.usuario2 = idUs2;
 	}
 
 	public long getUsuario1() {
 		return usuario1;
 	}
 
-	public void setUsuario1(long usuario1_id) {
-		this.usuario1 = usuario1_id;
+	public void setUsuario1(long usuario1Id) {
+		this.usuario1 = usuario1Id;
 	}
 
 	public long getUsuario2() {
 		return usuario2;
 	}
 
-	public void setUsuario2(long usuario2_id) {
-		this.usuario2 = usuario2_id;
+	public void setUsuario2(long usuario2Id) {
+		this.usuario2 = usuario2Id;
 	}
 
 	public Long getId() {
