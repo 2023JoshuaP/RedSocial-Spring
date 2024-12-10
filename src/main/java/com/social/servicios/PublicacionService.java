@@ -8,13 +8,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -37,14 +35,15 @@ import com.social.repositorios.PublicacionRepository;
 @Service
 public class PublicacionService {
 
-	@Autowired
 	private PublicacionRepository publicacionRepository;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	public PublicacionService(PublicacionRepository publicacionRepository) {
+		this.publicacionRepository = publicacionRepository;
+	}
 	public Page<Publicacion> getPublicaciones(Pageable pageable) {
-		Page<Publicacion> publicaciones = publicacionRepository.findAll(pageable);
-		return publicaciones;
+		return publicacionRepository.findAll(pageable);
 	}
 
 	public Publicacion getPublicacion(Long id) {
@@ -53,22 +52,18 @@ public class PublicacionService {
 
 	public void addPublicacion(Publicacion post) {
 		publicacionRepository.save(post);
-		log.trace("Añadida la publicacion: "+post);
+		log.trace("Añadida la publicacion: {}",post);
 	}
 
 	public void deletePublicacion(Long id) {
 		publicacionRepository.delete(id);
-		log.trace("Eliminada la publicacion: "+this.getPublicacion(id));
+		log.trace("Eliminada la publicacion:{} ",this.getPublicacion(id));
 	}
 
 	public Page<Publicacion> buscarPostPorTituloYContenido(Pageable pageable, String searchText) {
-		Page<Publicacion> publicacion = new PageImpl<Publicacion>(new LinkedList<Publicacion>());
-		
-		searchText = "%"+searchText+"%";
-		
-		publicacion = publicacionRepository.buscarPostPorTituloYContenido(pageable, searchText);
-	
-		return publicacion;
+		searchText = "%" + searchText + "%";
+
+		return publicacionRepository.buscarPostPorTituloYContenido(pageable, searchText);
 	}
 	
 	public String addImagen(MultipartFile imagen,Publicacion post) {
@@ -84,10 +79,9 @@ public class PublicacionService {
 
 
 	public Page<Publicacion> getPublicacionesAmigos(Pageable pageable, Usuario activo) {
-		Page<Publicacion> todas_pag = publicacionRepository.findAll(pageable);
-		List<Publicacion> todas = todas_pag.getContent();
+		Page<Publicacion> todasPag = publicacionRepository.findAll(pageable);
+		List<Publicacion> todas = todasPag.getContent();
 		List<Publicacion> amigos = todas.stream().filter(x -> x.getAutor().getAmigos().contains(activo)).collect(Collectors.toList());
-		Page<Publicacion> post = new PageImpl<Publicacion>(amigos);
-		return post;
+		return new PageImpl<>(amigos);
 	}
 }
