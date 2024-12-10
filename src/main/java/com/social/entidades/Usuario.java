@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.social.entidades;
 
@@ -18,7 +18,7 @@ import javax.persistence.Transient;
 
 /**
  * <h1>Usuario</h1> Modelo que representa a un usuario del sistema
- * 
+ *
  * @author Antonio Paya Gonzalez
  * @author Pablo Diaz Rancaño
  *
@@ -39,9 +39,9 @@ public class Usuario {
 	private String apellidos;
 	private String descripcion;
 	@Column(length = 16777216)
-	private String foto_perfil;
+	private String fotoPerfil;
 	@Column(length = 16777216)
-	private String foto_desc;
+	private String fotoDesc;
 	private String role;
 
 	@Transient
@@ -57,16 +57,16 @@ public class Usuario {
 	private Set<Comentario> comentarios = new HashSet<>();
 
 	@ManyToMany
-	private Set<Publicacion> likes_dados = new HashSet<>();
+	private Set<Publicacion> likesDados = new HashSet<>();
 
 	public Usuario() {
-		this.setFoto_perfil("https://ssl.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png");
+		this.setFotoPerfil("https://ssl.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png");
 	}
 
 
 	public Usuario(String username, String password, String email, String nombre, String apellidos, String descripcion,
-			String foto_perfil, String foto_desc, Set<Usuario> amigos, Set<Publicacion> post,
-			Set<Comentario> comentarios, Set<Publicacion> likes) {
+				   String fotoPerfil, String fotoDesc, Set<Usuario> amigos, Set<Publicacion> post,
+				   Set<Comentario> comentarios, Set<Publicacion>) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -74,8 +74,8 @@ public class Usuario {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.descripcion = descripcion;
-		this.foto_perfil = foto_perfil;
-		this.foto_desc = foto_desc;
+		this.fotoPerfil = fotoPerfil;
+		this.fotoDesc = fotoDesc;
 		this.amigos = amigos;
 		this.post = post;
 		this.comentarios = comentarios;
@@ -141,15 +141,15 @@ public class Usuario {
 	/**
 	 * @return the foto_perfil
 	 */
-	public String getFoto_perfil() {
-		return foto_perfil;
+	public String getFotoPerfil() {
+		return fotoPerfil;
 	}
 
 	/**
 	 * @return the foto_desc
 	 */
-	public String getFoto_desc() {
-		return foto_desc;
+	public String getFotoDesc() {
+		return fotoDesc;
 	}
 
 	/**
@@ -176,8 +176,8 @@ public class Usuario {
 	/**
 	 * @return the likes_dados
 	 */
-	public Set<Publicacion> getLikes_dados() {
-		return likes_dados;
+	public Set<Publicacion> getLikesDados() {
+		return likesDados;
 	}
 
 	/**
@@ -264,16 +264,16 @@ public class Usuario {
 	 * @param foto_perfil
 	 *            the foto_perfil to set
 	 */
-	public void setFoto_perfil(String foto_perfil) {
-		this.foto_perfil = foto_perfil;
+	public void setFotoPerfil(String fotoPerfil) {
+		this.fotoPerfil = fotoPerfil;
 	}
 
 	/**
 	 * @param foto_desc
 	 *            the foto_desc to set
 	 */
-	public void setFoto_desc(String foto_desc) {
-		this.foto_desc = foto_desc;
+	public void setFotoDesc(String fotoDesc) {
+		this.fotoDesc = fotoDesc;
 	}
 
 	/**
@@ -304,14 +304,14 @@ public class Usuario {
 	 * @param likes_dados
 	 *            the likes_dados to set
 	 */
-	public void setLikes_dados(Set<Publicacion> likes_dados) {
-		this.likes_dados = likes_dados;
+	public void setLikesDados(Set<Publicacion> likesDados) {
+		this.likesDados = likesDados;
 	}
 	// ===================Equals===================
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -334,12 +334,21 @@ public class Usuario {
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
+
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31; // A prime number used for hash computation
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
 	}
 
 	// ===================ToString===================
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -362,10 +371,7 @@ public class Usuario {
 		return amigos.contains(u);
 	}
 
-	// public boolean envioPeticionAmistad(Usuario u)
-	// {
-	//
-	// }
+
 
 	public void addPost(Publicacion post2) {
 		this.post.add(post2);
@@ -376,11 +382,11 @@ public class Usuario {
 	}
 
 	public void addLike(Publicacion u) {
-		this.likes_dados.add(u);
+		this.likesDados.add(u);
 	}
 
 	public boolean dioLike(Publicacion post) {
-		return this.likes_dados.stream().filter(x -> x.getId().equals(post.getId())).count() > 0 ? true : false;
+		return this.likesDados.stream().filter(x -> x.getId().equals(post.getId())).count() > 0;
 	}
 
 	public void deleteAmigo(Usuario usuario) {
